@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import StarMatch from './game/StarMatchGame';
 import './App.css';
-import './game/StarMatchGame.css'
+import './game/StarMatchGame.css';
+import React from 'react';
 
 function App() {
   return (
