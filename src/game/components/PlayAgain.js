@@ -1,11 +1,14 @@
-import React from 'react';
+import React from "react";
 
-const PlayAgain = props =>{
-    return (
-        <div className='game-done'>
-            <button onClick={props.reset}>Play Again</button>
-        </div>
-    );
+const PlayAgain = (props) => {
+  return (
+    <div className="game-done">
+      <div className="message" style={{ color: props.gameStatus === "lost" ? "red" : "green" }}>
+        {props.gameStatus === "lost" ? "Game Over" : "Nice"}
+      </div>
+      <button onClick={props.reset}>Play Again</button>
+    </div>
+  );
 };
 
 export default PlayAgain;

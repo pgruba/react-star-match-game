@@ -10,19 +10,23 @@ export default function StarMatch() {
   const [candidateNums, setCandidateNums] = useState([]);
   const [secondsLeft, setSecondsLeft] = useState(10);
 
+  /*#sideEffectsHooks
+  alway clean side effects*/
   useEffect(() => {
     console.log("Rendering...");
     if (secondsLeft > 0) {
       const timeoutId = setTimeout(() => {
         setSecondsLeft(secondsLeft - 1);
       }, 1000);
-
+      /*TODO: it is possible to freeze timer by clicking over and over again on any number
+      check jscomplete.com/rgs-hooks to see details */
       return () => clearTimeout(timeoutId);
     }
   });
 
   const candidatesAreWrong = utils.sum(candidateNums) > starsCount;
-  const gameIsDone = availableNums.length === 0;
+
+  const gameStatus = availableNums.length === 0 ? "won" : secondsLeft === 0 ? "lost" : "active";
 
   const numberstatus = (number) => {
     if (!availableNums.includes(number)) {
@@ -37,7 +41,7 @@ export default function StarMatch() {
   };
 
   const onNumberClick = (number, currentStatus) => {
-    if (currentStatus == "used") {
+    if (currentStatus == "used" || gameStatus !== "active") {
       return;
     }
 
@@ -68,7 +72,13 @@ export default function StarMatch() {
     <div className="game">
       <div className="help">Pickk 1 or more numbers that sum to the number of stars</div>
       <div className="body">
-        <div className="left">{gameIsDone ? <PlayAgain reset={resetGame} /> : <StarsDisplay count={starsCount} />}</div>
+        <div className="left">
+          {gameStatus !== "active" ? (
+            <PlayAgain reset={resetGame} gameStatus={gameStatus} />
+          ) : (
+            <StarsDisplay count={starsCount} />
+          )}
+        </div>
         <div className="right">
           {utils.range(1, 9).map((o) => (
             <PlayNumber key={o} status={numberstatus(o)} onClick={onNumberClick} number={o} />
